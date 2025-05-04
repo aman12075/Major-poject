@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fertilizer Recommendation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0fff0;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .form-container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 {
+            color: #2e7d32;
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #388e3c;
+            color: white;
+            padding: 12px;
+            margin-top: 20px;
+            width: 100%;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2e7d32;
+        }
+        h3 {
+            text-align: center;
+            color: #1b5e20;
+            background-color: #e8f5e9;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border: 1px solid #c8e6c9;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Fertilizer Recommendation</h1>
+        <form method="POST">
+            <input type="text" name="N" placeholder="N value" required>
+            <input type="text" name="P" placeholder="P value" required>
+            <input type="text" name="K" placeholder="K value" required>
+            <button type="submit">Recommend Fertilizer</button>
+        </form>
+
+        {% if recommended_fertilizer %}
+            <h3>Recommended Fertilizer: {{ recommended_fertilizer }}</h3>
+        {% endif %}
+    </div>
+</body>
+</html>
