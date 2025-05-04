@@ -1,6 +1,4 @@
 from flask import Flask, render_template, request
-import requests
-import feedparser
 import numpy as np
 import pandas as pd
 import pickle
@@ -16,33 +14,10 @@ scaler = pickle.load(open('minmaxscaler.pkl', 'rb'))  # Scaler for crop model
 dtr_model = pickle.load(open('dtr.pkl', 'rb'))  # Crop yield prediction model
 preprocessor = pickle.load(open('preprocessor.pkl', 'rb'))  # Preprocessor for crop yield model
 
-def fetch_agriculture_news():
-    feed_url = "https://pib.gov.in/Rss.aspx?mod=1&l=1"
-    feed = feedparser.parse(feed_url)
-    
-    keywords = ["agriculture", "farmer", "pm-kisan", "crop", "fertilizer", "soil", "subsidy", "irrigation"]
-    
-    news_items = []
-    for entry in feed.entries:
-        content = f"{entry.title} {entry.summary}".lower()
-        if any(keyword in content for keyword in keywords):
-            news_items.append({
-                "title": entry.title,
-                "link": entry.link,
-                "summary": entry.summary
-            })
-        if len(news_items) >= 5:
-            break  # limit to 5 entries
-    
-    return news_items
-
-
-# Home page with government initiatives
+# Home page f
 @app.route('/')
 def home():
-    initiatives = fetch_agriculture_news()
-    return render_template("index.html", initiatives=initiatives)
-
+    return render_template("index.html")
 
 # Crop recommendation page
 @app.route('/crop_recommendation', methods=['GET', 'POST'])
@@ -78,7 +53,6 @@ def crop_recommendation():
 def crop_yield_prediction():
     if request.method == 'POST':
         try:
-            # Extract values from the form
             year = int(request.form['year'])
             rainfall = float(request.form['rainfall'])
             pesticides = float(request.form['pesticides'])
@@ -86,7 +60,6 @@ def crop_yield_prediction():
             area = request.form['area']
             item = request.form['item']
 
-            # Prepare data for prediction
             features = np.array([[year, rainfall, pesticides, temp, area, item]], dtype=object)
             transformed = preprocessor.transform(features)
             result = dtr_model.predict(transformed).reshape(1, -1)
@@ -96,8 +69,6 @@ def crop_yield_prediction():
             return f"An error occurred: {e}"
 
     return render_template('crop_yield_prediction.html')
-
-
 
 # Fertilizer recommendation page
 @app.route('/fertilizer_recommendation', methods=['GET', 'POST'])
@@ -125,5 +96,4 @@ def fertilizer_recommendation():
     return render_template('fertilizer_recommendation.html')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
-
+    app.run(debug=True)
